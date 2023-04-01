@@ -1,13 +1,15 @@
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import express from 'express'
+import authMiddleware from './middleware/authMiddleware.js'
 
 const app = express()
-app.use('/', (req, res) => {
+
+app.use('/', authMiddleware, (req, res) => {
     res.send('Hello World')
 })
-const PORT = process.env.PORT || 3000
 
+const PORT = process.env.PORT || 3000
 const httpServer = createServer(app)
 
 const io = new Server(httpServer, {
@@ -28,3 +30,5 @@ io.on('connection', (socket) => {
 httpServer.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`)
 })
+
+export default app
